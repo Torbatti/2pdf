@@ -1,27 +1,45 @@
+import math
 from pypdf import PdfWriter, PdfReader
 
-even_pdf = PdfReader(open("document_even.pdf", "rb"))
-odd_pdf = PdfReader(open("document_odd.pdf", "rb"))
+pdf = PdfReader(open("document.pdf", "rb"))
+blank_pdf = PdfReader(open("blank_a4.pdf", "rb"))
 
-output = PdfWriter()
+output_pdf = PdfWriter()
 
-ev = 0
-od = 0
+a = len(pdf.pages)
+x = math.floor(a / 4)
+y = a % 4
 
-print(len(even_pdf.pages)++len(odd_pdf.pages))
+i = 0
+# TODO: scape before reaching out of index
+for n in range(x + 1):
+    if i < x:
+        output_pdf.add_page(pdf.pages[(4*i)])
+        output_pdf.add_page(pdf.pages[(4*i)+2])
+        output_pdf.add_page(pdf.pages[(4*i)+3])
+        output_pdf.add_page(pdf.pages[(4*i)+1]) 
+    if i == x:
+        if y == 1:
+            output_pdf.add_page(pdf.pages[(4*i)])
+            output_pdf.add_page(blank_pdf.pages[0])
+            output_pdf.add_page(blank_pdf.pages[0])
+            output_pdf.add_page(blank_pdf.pages[0])
+        if y == 2:
+            output_pdf.add_page(pdf.pages[(4*i)])
+            output_pdf.add_page(blank_pdf.pages[0])
+            output_pdf.add_page(blank_pdf.pages[0])
+            output_pdf.add_page(pdf.pages[(4*i)+1])
+        if y == 3:
+            output_pdf.add_page(pdf.pages[(4*i)])
+            output_pdf.add_page(pdf.pages[(4*i)+2])
+            output_pdf.add_page(blank_pdf.pages[0])
+            output_pdf.add_page(pdf.pages[(4*i)+1])
+        if y == 0:
+            output_pdf.add_page(pdf.pages[(4*i)])
+            output_pdf.add_page(pdf.pages[(4*i)+2])
+            output_pdf.add_page(pdf.pages[(4*i)+3])
+            output_pdf.add_page(pdf.pages[(4*i)+1])
+    i += 1
 
-for i in range(len(even_pdf.pages)++len(odd_pdf.pages)):
-    if i%2 == 1:
-        if ev < len(even_pdf.pages):
-            output.add_page(even_pdf.pages[ev])
-            print("ev")
-            ev = ev + 1
-    if i%2 == 0:
-        if od < len(odd_pdf.pages):
-            output.add_page(odd_pdf.pages[od])
-            print("od")
-            od = od + 1
-
-with open("document.pdf", "wb") as outputStream:
-    output.write(outputStream)
-        
+with open("document_output.pdf", "wb") as outputStream:
+    output_pdf.write(outputStream)
